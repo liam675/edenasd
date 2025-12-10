@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eden — Under Maintenance</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body, html {
+      height: 100%;
+      background: #000000;
+      font-family: 'Inter', system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      overflow: hidden;
+    }
+
+    .text {
+      font-size: 44px;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .white {
+      color: #ffffff;
+    }
+
+    /* Bolder, richer pastel pink gradient */
+    .highlight {
+      background: linear-gradient(to right, #ff6b9d, #ff4b8a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      /* Optional extra pop */
+      filter: brightness(1.1) saturate(1.2);
+    }
+
+    @media (max-width: 640px) {
+      .text {
+        font-size: 32px;
+        padding: 0 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="text">
+    <span class="white">Eden website is under</span>
+    <span class="highlight"> maintenance</span>
+  </div>
+
+</body>
+</html>
