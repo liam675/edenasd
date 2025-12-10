@@ -3,61 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eden</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <title>eden</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet">
-
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body, html {
       height: 100%;
-      background: #000000;
-      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      background: #000;
+      font-family: 'Inter', sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      overflow: hidden;
     }
-
-    .text {
-      font-size: 44px;
+    .msg {
+      font-size: 52px;
       font-weight: 600;
       text-align: center;
-      white-space: nowrap;
     }
-
-    .white {
-      color: #ffffff;
-    }
-
-    /* Bolder, richer pastel pink gradient */
-    .highlight {
+    .pink {
       background: linear-gradient(to right, #ff6b9d, #ff4b8a);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      /* Optional extra pop */
-      filter: brightness(1.1) saturate(1.2);
     }
-
-    @media (max-width: 640px) {
-      .text {
-        font-size: 32px;
-        padding: 0 20px;
-      }
-    }
+    @media (max-width:640px) { .msg { font-size:38px; } }
   </style>
 </head>
 <body>
 
-  <div class="text">
-    <span class="white">Eden website is under</span>
-    <span class="highlight"> maintenance</span>
+  <!-- Only allowed IPs see this -->
+  <div class="msg" id="maintenance" style="display:none">
+    website is under <span class="pink">maintenance</span>
   </div>
+
+  <!-- Everyone else sees this -->
+  <div class="msg" id="nah">fuhh nah twin</div>
+
+  <script>
+    const ALLOWED_IPS = ["66.7", "216.164.147.91"];
+
+    async function getIP() {
+      const urls = ["https://api.ipify.org", "https://ipv4.icanhazip.com", "https://api.my-ip.io/ip"];
+      for (const u of urls) {
+        try {
+          const r = await fetch(u, {cache:"no-store"});
+          if (r.ok) {
+            const ip = (await r.text()).trim();
+            if (/^\d+\.\d+\.\d+\.\d+$/.test(ip)) return ip;
+          }
+        } catch {}
+      }
+      return null;
+    }
+
+    (async () => {
+      const ip = await getIP();
+      if (ip && ALLOWED_IPS.includes(ip)) {
+        document.getElementById("nah").style.display = "none";
+        document.getElementById("maintenance").style.display = "block";
+      }
+    })();
+  </script>
 
 </body>
 </html>
