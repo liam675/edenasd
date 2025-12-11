@@ -1,35 +1,30 @@
-// api/auth.js
-import { kv } from '@vercel/kv';
+// api/auth.js  ←  FINAL WORKING VERSION
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, message: 'Method not allowed' });
+  if (req.method !== 'POST') return res.status(405).end();
+
+  const { key, hwid } = req.body || {};
+
+  if (!key || !hwid) return res.status(400).json({ success: false, message: "missing" });
+
+  const stored = await redis.get(`hwid:${key}`);
+
+  if (!stored) {
+    await redis.set(`hwid:${key}`, hwid);
+    return res.json({ success: true, registered: true });
   }
 
-  const { key, hwid } = req.body;
-
-  if (!key || !hwid) {
-    return res.status(400).json({ success: false, message: 'Missing key or hwid' });
+  if (stored === hwid) {
+    return res.json({ success: true, registered: false });
   }
 
-  const storedHwid = await kv.get(`hwid:${key}`);
-
-  // First time using this key → lock the HWID
-  if (!storedHwid) {
-    return res.status(200).json({ success: true, registered: true });
-  }
-
-  // Already registered → check if HWID matches
-  if (storedHwid === hwid) {
-    return res.status(200).json({ success: true, registered: false });
-  } else {
-    return res.status(403).json({ success: false, message: 'HWID locked to another machine' });
-  }
+  return res.status(403).json({ success: false, message: "HWID locked" });
 }
 
-// Needed so Vercel parses JSON body correctly
-export const config = {
-  api: {
-    bodyParser: true,
-  },
-};
+export const config = { api: { bodyParser: true } };
