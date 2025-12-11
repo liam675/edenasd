@@ -1,4 +1,4 @@
-// api/auth.js   ←  FINAL – just overwrite everything in this file
+// api/auth.js   ←  FINAL – just overwrite everything in this fil
 import { Redis } from '@upstash/redis'
 
 const redis = Redis.fromEnv()
