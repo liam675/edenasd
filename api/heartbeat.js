@@ -4,7 +4,7 @@ import { kv } from '@vercel/kv';
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { key, hwid } = req.body;
-    // You can update last_seen timestamp here if you want
+    // You can update last_seen
     await kv.set(`lastseen:${key}`, Date.now());
     return res.status(200).json({ status: 'alive' });
   }
